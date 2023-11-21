@@ -1,10 +1,9 @@
 # Data Science Lab
 Neste laboratório, estão armazenados os datasets, a análise estatística exploratória das bases de dados, gráficos informativos e os modelos preditivos de inteligência artificial. A API em Flask integra os modelos de inteligência artificial a aplicação da Cure Sharp.
 
-<hr>
-
 <h2>Servidor Flask</h2>
-- Abaixo estão as instalações necessárias para rodar a aplicação. O Flask roda por padrão na porta 5000.
+
+  - Abaixo estão as instalações necessárias para rodar a aplicação. O Flask roda por padrão na porta 5000.
 
 ```sh
 $ pip install -U scikit-learn scipy matplotlib
