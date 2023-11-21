@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, json
 import pickle
 import traceback
 import os
+import json
 
 
 app = Flask(__name__)
@@ -29,7 +30,7 @@ def maternal():
             prediction = model.predict([[value for key, value in user_input.items()]])
 
             result = {
-                "riscoGravidez": prediction[0]
+                "risco": prediction[0]
             }
 
             return jsonify(result), 200
@@ -64,6 +65,9 @@ def fetal():
             return jsonify(result), 200
 
         except IOError:
+            return jsonify({'trace': traceback.format_exc()})
+
+        except json.decoder.JSONDecodeError:
             return jsonify({'trace': traceback.format_exc()})
 
     else:
