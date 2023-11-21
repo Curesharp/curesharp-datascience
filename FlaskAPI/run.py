@@ -1,7 +1,7 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, json
 import pickle
 import traceback
-import json
+import os
 
 
 app = Flask(__name__)
@@ -12,8 +12,8 @@ def home():
     return "Bem vindo a home de Machine Learning da Cure Sharp."
 
 
-@app.route("/materno", methods=['POST', 'GET'])
-def materno():
+@app.route("/maternal", methods=['POST', 'GET'])
+def maternal():
     if request.method == 'POST':
         try:
 
@@ -21,14 +21,44 @@ def materno():
             with open('./paths.txt', 'r') as arquivo:
                 paths = json.load(arquivo)
             path = paths['maternal']
+            filename = os.path.abspath(path)
 
             # Carregando modelo e fazendo predição
-            model = pickle.load(open(path, 'rb'))
-            user_input = request.get_json()
-            prediction = model.predict([user_input])
+            model = pickle.load(open(filename, 'rb'))
+            user_input = json.loads(request.data)
+            prediction = model.predict([[value for key, value in user_input.items()]])
 
             result = {
-                "riscoGravidez": prediction
+                "riscoGravidez": prediction[0]
+            }
+
+            return jsonify(result), 200
+
+        except IOError:
+            return jsonify({'trace': traceback.format_exc()})
+
+    else:
+        return "Faça uma requisição do tipo POST."
+
+
+@app.route("/fetal", methods=['POST', 'GET'])
+def fetal():
+    if request.method == 'POST':
+        try:
+
+            # Pegando path
+            with open('./paths.txt', 'r') as arquivo:
+                paths = json.load(arquivo)
+            path = paths['fetal']
+            filename = os.path.abspath(path)
+
+            # Carregando modelo e fazendo predição
+            model = pickle.load(open(filename, 'rb'))
+            user_input = json.loads(request.data)
+            prediction = model.predict([[value for key, value in user_input.items()]])
+
+            result = {
+                "saudeFeto": prediction[0]
             }
 
             return jsonify(result), 200
